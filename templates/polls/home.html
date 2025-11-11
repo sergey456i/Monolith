@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Активные опросы</h2>
+{% for q in questions %}
+    <div>
+        <h3><a href="{% url 'polls:question_detail' q.pk %}">{{ q.title }}</a></h3>
+        <p>{{ q.short_description }}</p>
+    </div>
+{% empty %}
+    <p>Нет активных опросов.</p>
+{% endfor %}
+{% endblock %}

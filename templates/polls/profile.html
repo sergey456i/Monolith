@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Мой профиль</h2>
+<p>Имя: {{ user.username }}</p>
+<p>Email: {{ user.email }}</p>
+{% if user.avatar %}
+<img src="{{ user.avatar.url }}" width="100" alt="">
+{% endif %}
+<p><a href="{% url 'polls:profile_edit' %}">Редактировать</a></p>
+<p><a href="{% url 'polls:delete_profile' %}" style="color:red;">Удалить профиль</a></p>
+{% endblock %}
