@@ -6,5 +6,5 @@
     {% csrf_token %}
     <button type="submit" style="background:red;color:white;">Удалить</button>
 </form>
-<a href="{% url 'profile' %}">Отмена</a>
+<a href="{% url 'polls:profile' %}">Отмена</a>
 {% endblock %}

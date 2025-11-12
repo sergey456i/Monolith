@@ -23,7 +23,7 @@ class QuestionForm(forms.ModelForm):
             'short_description' : 'Краткое описание ',
             'full_description' : 'Полное описание',
             'image' : 'Фото',
-            'lifetime_hours' : 'Время жизни опроса'
+            'lifetime_hours' : 'Время жизни опроса в часах'
                  }
 
 class ChoiceForm(forms.ModelForm):

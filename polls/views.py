@@ -23,7 +23,7 @@ def register(request):
         if form.is_valid():
             user = form.save()
             login(request, user)
-            return redirect('home')
+            return redirect('polls:home')
     else:
         form = CustomUserCreationForm()
     return render(request, 'registration/register.html', {'form': form})
@@ -45,7 +45,7 @@ def profile_edit(request):
         form = UserEditForm(request.POST, request.FILES, instance=request.user)
         if form.is_valid():
             form.save()
-            return redirect('profile')
+            return redirect('polls: profile')
     else:
         form = UserEditForm(instance=request.user)
     return render(request, 'polls/profile_edit.html', {'form': form})
@@ -54,7 +54,7 @@ def profile_edit(request):
 def delete_profile(request):
     if request.method == 'POST':
         request.user.delete()
-        return redirect('home')
+        return redirect('polls:home')
     return render(request, 'polls/delete_profile.html')
 
 @login_required
@@ -90,7 +90,7 @@ def question_detail(request, pk):
                 messages.success(request, "Ваш голос учтён!")
             else:
                 messages.error(request, "Вы уже голосовали в этом опросе.")
-            return redirect('question_detail', pk=pk) # или 'polls:question_detail'
+            return redirect('polls:question_detail', pk=pk) # или 'polls:question_detail'
 
     total_votes = question.vote_set.count()
 
