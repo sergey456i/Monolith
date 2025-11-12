@@ -9,11 +9,24 @@ from .forms import CustomUserCreationForm, UserEditForm, QuestionForm, ChoiceFor
 
 
 def home(request):
-    questions = Question.objects.filter(
-        created_at__gte=timezone.now() - timezone.timedelta(hours=24)
-    ).exclude(created_at__gt=timezone.now())  # Только не просроченные
-    if not request.user.is_staff:
-        questions = questions.filter(created_at__gte=timezone.now() - timezone.timedelta(hours=24))
+    current_time = timezone.now()
+
+    if request.user.is_staff:
+        # Администратор видит все опросы
+        questions = Question.objects.all().order_by('-created_at')
+    else:
+        # Обычный пользователь видит только не истекшие опросы
+        # Создаем список ID неистекших опросов
+        valid_question_ids = []
+        for question in Question.objects.all():
+            if not question.is_expired():
+                valid_question_ids.append(question.id)
+
+        # Фильтруем по этим ID
+        questions = Question.objects.filter(
+            id__in=valid_question_ids
+        ).order_by('-created_at')
+
     return render(request, 'polls/home.html', {'questions': questions})
 
 
@@ -45,7 +58,7 @@ def profile_edit(request):
         form = UserEditForm(request.POST, request.FILES, instance=request.user)
         if form.is_valid():
             form.save()
-            return redirect('polls: profile')
+            return redirect('polls:profile')
     else:
         form = UserEditForm(instance=request.user)
     return render(request, 'polls/profile_edit.html', {'form': form})
@@ -80,7 +93,7 @@ def create_question(request):
 def question_detail(request, pk):
     question = get_object_or_404(Question, pk=pk)
     if question.is_expired() and not request.user.is_staff:
-        return redirect('home')
+        return redirect('polls:home')
     if request.method == 'POST':
         choice_id = request.POST.get('choice')
         if choice_id:

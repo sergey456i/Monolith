@@ -18,7 +18,7 @@ class Question(models.Model):
     def is_expired(self):
         return timezone.now() > self.created_at + timedelta(hours=self.lifetime_hours)
 
-    def str(self):
+    def __str__(self):
         return self.title
 
 class Choice(models.Model):
